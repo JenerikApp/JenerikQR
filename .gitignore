@@ -1,0 +1,5 @@
+# Tüm build klasörünü dışla
+build/*
+
+# build/web'i dışlama (takip et)
+!build/web/

@@ -1,0 +1,47 @@
+name: jenerik_qr
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.2
+
+dependencies:
+  file_picker: ^8.3.5
+  flutter:
+    sdk: flutter
+  
+  gallery_saver: ^2.3.2
+  image_gallery_saver: ^2.0.3
+  image_picker: ^1.1.2
+  path_provider: ^2.1.5
+  qr_flutter: ^4.1.0
+  screenshot: ^3.0.0
+  shared_preferences: ^2.5.2
+  url_launcher: ^6.3.1
+  validators: ^3.0.0
+  firebase_core: ^3.11.0
+  firebase_analytics: ^11.4.2
+  flutter_launcher_icons: ^0.9.2
+  
+  
+  
+
+    
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/yazisiz_seffaf.png
+    - assets/logo_flutter.png
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png" # İkon resminizin yolu
