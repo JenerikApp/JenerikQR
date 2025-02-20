@@ -156,183 +156,105 @@ class _QRGeneratorPageState extends State<QRGeneratorPage>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("QR Kod Oluşturucu"),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const MyApp()),
-              (route) => false,
-            );
-          },
-        ),
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true, // Mobil cihazlarda tab'lerin kaydırılabilir olması için
-          tabs: const [
-            Tab(text: 'Kartvizit'),
-            Tab(text: 'E-Posta Taslağı'),
-            Tab(text: 'Bağlantı'),
-            Tab(text: 'WiFi Şifresi'),
-          ],
-        ),
-      ),
-      body: LayoutBuilder( // Farklı ekran boyutları için farklı düzenler oluşturmak için LayoutBuilder kullanıyoruz
-        builder: (BuildContext context, BoxConstraints constraints) {
-          if (constraints.maxWidth < 600) { // Mobil cihazlar için (yaklaşık olarak iPhone 11 ve daha küçük ekranlar)
-            return SingleChildScrollView( // Taşmaları önlemek için SingleChildScrollView
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch, // Widget'ları yatayda genişlet
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.4, // TabBarView için ekran yüksekliğine göre oransal yükseklik
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        _buildKartvizitTab(),
-                        _buildEmailTab(),
-                        _buildBaglantiTab(),
-                        _buildWifiTab(),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Center( // QR kodunu ortala
-                    child: _showQR
-                      ? RepaintBoundary(
-                            key: _qrKey,
-                            child: QrImageView(
-                              data: _qrData,
-                              version: QrVersions.auto,
-                              size: 200,
-                              backgroundColor: Colors.white,
-                            ),
-                          )
-                      : Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.qr_code, size: 80, color: Colors.grey),
-                              SizedBox(height: 10),
-                              Text("QR kodunuz burada oluşturulacaktır.",
-                                  textAlign: TextAlign.center),
-                            ],
-                          ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4DFFB5),
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: _generateQR,
-                    child: const Text(
-                      "QR Oluştur",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  if (_showQR)
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4DFFB5),),
-                      onPressed: _saveQR,
-                      child: const Text("QR İndir",style: TextStyle(fontWeight: FontWeight.bold),),
-                    ),
-                ],
-              ),
-            );
-          } else { // Daha büyük ekranlar için (orijinal tasarım)
-            return Column(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      // Sol taraf: Form alanları
-                      Expanded(
-                        flex: 1,
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: [
-                            _buildKartvizitTab(),
-                            _buildEmailTab(),
-                            _buildBaglantiTab(),
-                            _buildWifiTab(),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      // Sağ taraf: QR kod ve indir butonu
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (!_showQR)
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(Icons.qr_code, size: 80, color: Colors.grey),
-                                  SizedBox(height: 10),
-                                  Text("QR kodunuz burada oluşturulacaktır.",
-                                      textAlign: TextAlign.center),
-                                ],
-                              ),
-                            if (_showQR)
-                              RepaintBoundary(
-                                key: _qrKey,
-                                child: QrImageView(
-                                  data: _qrData,
-                                  version: QrVersions.auto,
-                                  size: 200,
-                                  backgroundColor: Colors.white,
-                                ),
-                              ),
-                            if (_showQR)
-                              ElevatedButton(
-                                onPressed: _saveQR,
-                                child: const Text("QR İndir"),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4DFFB5),
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: _generateQR,
-                  child: const Text(
-                    "QR Oluştur",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text("QR Kod Oluşturucu"),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const MyApp()),
+            (route) => false,
+          );
         },
       ),
-    );
-  }
+      bottom: TabBar(
+        controller: _tabController,
+        isScrollable: true, // Mobil cihazlarda tab'lerin kaydırılabilir olması için
+        tabs: const [
+          Tab(text: 'Kartvizit'),
+          Tab(text: 'E-Posta Taslağı'),
+          Tab(text: 'Bağlantı'),
+          Tab(text: 'WiFi Şifresi'),
+        ],
+      ),
+    ),
+    body: LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return SingleChildScrollView( // Taşmaları önlemek için SingleChildScrollView
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch, // Widget'ları yatayda genişlet
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.35, // TabBarView için ekran yüksekliğine göre oransal yükseklik
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildKartvizitTab(),
+                    _buildEmailTab(),
+                    _buildBaglantiTab(),
+                    _buildWifiTab(),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: _showQR
+                    ? RepaintBoundary(
+                        key: _qrKey,
+                        child: QrImageView(
+                          data: _qrData,
+                          version: QrVersions.auto,
+                          size: 200,
+                          backgroundColor: Colors.white,
+                        ),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(Icons.qr_code, size: 80, color: Colors.grey),
+                          SizedBox(height: 10),
+                          Text("QR kodunuz burada oluşturulacaktır.",
+                              textAlign: TextAlign.center),
+                        ],
+                      ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4DFFB5),
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: _generateQR,
+                child: const Text(
+                  "QR Oluştur",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              if (_showQR)
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4DFFB5)),
+                  onPressed: _saveQR,
+                  child: const Text("QR İndir", style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+            ],
+          ),
+        );
+      },
+    ),
+  );
+}
+
 
   // Kartvizit Tab içeriği
   Widget _buildKartvizitTab() {
